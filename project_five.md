@@ -2,10 +2,9 @@
 
 The Two Dimensional Cosine Transform can be used to compress small blocks of images.The compression results in the loss of information, but the transform is designed so that the information ignored is the information that the eye is least sensitive to.
 
+The two-dimensional Discrete Cosine Transform is simply the one dimensional DCT applied in two dimensions, one after the other. It is used to interpolate data on a two-dimensional grid, in a straightforward analogy to the one dimensional case. In the case of images, the two-dimensional grid represents a block of pixel values with either grayscale or color intensities.
 
-
-
-
+The 2D Discrete Cosine Transform (2D-DCT) of the 2D n by n matrix is the matrix Y = C*X*C_transpose.
 
 
 
