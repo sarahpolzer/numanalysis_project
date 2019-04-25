@@ -6,6 +6,9 @@ The two-dimensional Discrete Cosine Transform is simply the one dimensional DCT 
 
 The 2D Discrete Cosine Transform (2D-DCT) of the 2D n by n matrix is the matrix Y = C*X*C_transpose.
 
+2D Cosine Transform 
+
+![](/2DCT.PNG)
 
 
 
