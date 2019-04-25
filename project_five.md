@@ -1,11 +1,35 @@
-Question 3 Part 1:
+# Introduction
+
+The Two Dimensional Cosine Transform can be used to compress small blocks of images.The compression results in the loss of information, but the transform is designed so that the information ignored is the information that the eye is least sensitive to.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+**Question 3 Part 1:**
 
 Obtain a grayscale image ﬁle of your choice, and use the imread command to import into MATLAB. Crop the resulting matrix so that each dimension is a multiple of 8. If necessary, converting a color RGB image to gray scale can be accomplished by the standard formula (11.15).
 
 
 ```matlab
 
-%Question 3 Part 1
 x = imread('baboon.png');
 x = imresize(x,[256 256]);
 r=x(:,:,1);g=x(:,:,2);b=x(:,:,3);
@@ -23,7 +47,7 @@ Output
 
 
 
-Question 3a:
+**Question 3a:**
 (a) Extract an 8×8 pixel block, for example, by using the MATLAB command xb=x(81:88,81:88). Display the block with the imagesc command
 
 
@@ -39,7 +63,7 @@ imagesc(x_eight);colormap(gray);
 ![Another baboon](/baboon_q3_pa.png)
 
 
-Question 3b:
+**Question 3b:**
 
 
 (b) Apply the 2D-DCT
@@ -74,7 +98,7 @@ y = C*Xc*C';
 
 
 
-Question 3c: 
+**Question 3c:**
 
 (c) Quantize by using linear quantization with p=1,2, and 4. Print out each YQ. 
 
@@ -147,7 +171,7 @@ Yq =
 
 ```
 
-Question 3d:
+**Question 3d:**
 
 
 (d) Reconstruct the block by using the inverse 2D-DCT, and compare with the original. Use MATLAB commands colormap(gray) and imagesc(X,[0 255]). 
@@ -230,7 +254,7 @@ Baboon image for p=4
 
 
 
-4. Carry out the steps of Computer Problem 3, but quantize by the JPEG-suggested matrix (11.25) with p=1.
+**4. Carry out the steps of Computer Problem 3, but quantize by the JPEG-suggested matrix (11.25) with p=1.**
 
 
 ```matlab
@@ -288,7 +312,7 @@ Result
 ![squirrel](/squirrel_q4.png)
 
 
-5. Obtain a color image ﬁle of your choice. Carry out the steps of Computer Problem 3 for colors R, G, and B separately, using linear quantization, and recombine as a color image. 
+**5. Obtain a color image ﬁle of your choice. Carry out the steps of Computer Problem 3 for colors R, G, and B separately, using linear quantization, and recombine as a color image.** 
 
 
 ```matlab
@@ -334,4 +358,94 @@ imagesc(new);colormap(gray);
 Result
 
 ![](/squirrel_eye.png)
+
+
+
+
+
+6. Obtain a color image, and transform the RGB values to luminance/color difference coordinates. Carry out the steps of Computer Problem 3 for Y, U, andV separately by using JPEG quantization, and recombine as a color image.
+
+```matlab
+
+new = zeros(256,256,3);
+p = 1.0;
+
+C = zeros(8);
+for i=1:8
+    for j=1:8
+        C(i,j)=cos((i-1)*(2*j-1)*pi/(2*8));
+    end
+end
+
+Q1 = [17 18 24 47 99 99 99 99;
+    18 21 26 66 99 99 99 99;
+    24 26 56 99 99 99 99 99;
+    47 66 99 99 99 99 99 99;
+    99 99 99 99 99 99 99 99;
+    99 99 99 99 99 99 99 99;
+    99 99 99 99 99 99 99 99;
+    99 99 99 99 99 99 99 99];
+Q1 = p*Q;
+
+Q2 = [16 11 10 16 24 40 51 61;
+    12 12 14 19 26 58 60 55;
+    14 13 16 24 40 57 69 56;
+    14 17 22 29 51 87 80 62;
+    18 22 37 56 68 109 103 77;
+    24 35 55 64 81 104 113 92;
+    49 64 78 87 103 121 120 101;
+    72 92 95 98 112 100 103 99];
+Q2 = p*Q;
+
+
+
+C=sqrt(2/8)*C;
+C(1,:)=C (1,:)/sqrt(2);
+
+x = imread('squirrel.png');
+x = double(x);
+x = x(200:556,200:556,:);
+y = 0.299*x(:,:,1)+0.587*x(:,:,2)+0.114*x(:,:,3);
+u = x(:,:,3)-y;
+v = x(:,:,1)-y ;
+x(:,:,1) = y;
+x(:,:,2) = u;
+x(:,:,3) = v;
+for i=1:8:256
+    for j=1:8:256
+        for k=1:3
+            x_eight = x(i:i+7,j:j+7,k);
+            Xd=double(x_eight);
+            Xc=Xd-128;
+            y = C*Xc*C';
+            if k==1
+               Yq=round(y./Q2);
+               Ydq=Yq.*Q2;
+            else
+               Yq=round(y./Q1);
+               Ydq=Yq.*Q1;
+            end
+            Xdq=C'*Ydq*C;
+            Xe=Xdq+128;
+            Xf = Xe;
+            new(i:i+7,j:j+7,k) = Xf; 
+        end
+    end
+end
+
+b = new(:,:,2)+new(:,:,1);
+r = new(:,:,1) + new(:,:,3);
+g = (new(:,:,1)-0.299*r-0.114*b)/0.587;
+new(:,:,1) = r;
+new(:,:,2) = g;
+new(:,:,3) = b;
+
+
+new = uint8(new);
+imagesc(new);
+```
+
+Result
+
+![](/Squirrel_eye_yuv.png)
 
