@@ -24,7 +24,7 @@ If you apply low pass filtering, and then find the inverse DCT, you can invert t
 
 ![](/a.PNG)
 
-** Quantization **
+**Quantization**
 
 Quantization is a selective method of low pass filtering. It is a way to retain low accuracy versions of pixel coefficients at a lower storage cost. The human eye is least sensitive to higher spatial frequencies - so quantization is a good method of low pass filtering. The idea is to assign fewer bits to store information about the lower right corner of the transform matrix instead of just throwing it away. 
 
@@ -53,6 +53,22 @@ The quantization matrix is different for JPEG images. The quantization matrix fo
 ![](/JPEG_quantization_matrix.PNG)
 
 
+Additionally, if you are dealing with JPEG images and would like to compress a colored image, you must convert the original image from RGB to YUV. The formulas for converting RGB to YUV are below.
+
+Y = 0.299R + 0.587G + 0.114B 
+U = B-Y
+V = R-Y 
+
+After converting the image to YUV, compression takes place. Except when dealing with color and YUV values, the quantization matrix for U and V changes to:
+
+![](/color_JPEG_quantization_matrix.PNG)
+
+After applying compression, the YUV values must be converted back to RGB using the formulas below.
+B = U+Y
+R = V+Y
+G = (Y-0.299R-0.114B)/(0.587)
+
+All of these concepts will be displayed in the exercises below :) 
 
 
 
