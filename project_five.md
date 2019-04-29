@@ -1,4 +1,6 @@
 # Introduction
+## Project 5
+### Sarah Polzer
 
 The Two Dimensional Cosine Transform can be used to compress small blocks of images.The compression results in the loss of information, but the transform is designed so that the information ignored is the information that the eye is least sensitive to.
 
