@@ -4,22 +4,53 @@ The Two Dimensional Cosine Transform can be used to compress small blocks of ima
 
 The two-dimensional Discrete Cosine Transform is simply the one dimensional DCT applied in two dimensions, one after the other. It is used to interpolate data on a two-dimensional grid, in a straightforward analogy to the one dimensional case. In the case of images, the two-dimensional grid represents a block of pixel values with either grayscale or color intensities.
 
-The 2D Discrete Cosine Transform (2D-DCT) of the 2D n by n matrix is the matrix Y = C*X*C_transpose.
+The 2D Discrete Cosine Transform (2D-DCT) of the 2D n by n matrix is the matrix Y = C*X*C_transpose. The inverse of the 2D-DCT is easy to express in terms of the DCT matrix C. Since Y=C*X*C_transpose and C is orthogonal, the X is recovered as X=C_transpose*Y*C
 
 2D Cosine Transform 
 
 ![](/2DCT.PNG)
 
+Finding the 2D-DCT of an image and inverting it allows you to interpolate pixels of the image. Inverting the orthogonal 2D-DCT is similar to interpolation. Interpolation recovers the original data points from functions that are constructed with interpolating coefficients that come from the transform. Because C is an orthogonal matrix, the inversion of the 2D-DCT can be used to interpolate original data points. 
 
 
+Example:
+If you gather an 8 by 8 block of pixels from an image and convert them to gray scale, you can create a matrix such as X. 
+![](/x.PNG)
+
+If you apply the 2D-DCT you can get the matrix Y. 
+![](/Y.PNG)
+
+If you apply low pass filtering, and then find the inverse DCT, you can invert the transformed matrix and find the image A. 
+
+![](/a.PNG)
+
+** Quantization **
+
+Quantization is a selective method of low pass filtering. It is a way to retain low accuracy versions of pixel coefficients at a lower storage cost. The human eye is least sensitive to higher spatial frequencies - so quantization is a good method of low pass filtering. The idea is to assign fewer bits to store information about the lower right corner of the transform matrix instead of just throwing it away. 
+
+Quatization is performed like so: you are rounding y/q to the nearest integer : 
+
+![](/quantization.PNG)
+
+If quantization of the transformed image is performed. Y will be replaced by the matrix below. 
 
 
+![](/y_sub_Q.PNG)
+
+The transformed matrix Y is divided by the quantization matrix. The quantization matrix is pictured below. A coefficient p is included. As p increases, the more lossy the compression will be with quantization. 
 
 
+![](/quantization_matrix.PNG)
 
 
+After the matrix Y is divided by the quantization matrix, it is dequantized and the inverse-DCT is found of the dequantized matrix. The pixel values are converted to uint8 integers and the finished compressed image is ready to be displayed!
 
 
+**Note** 
+
+The quantization matrix is different for JPEG images. The quantization matrix for JPEG images is pictured below.
+
+![](/JPEG_quantization_matrix.PNG)
 
 
 
